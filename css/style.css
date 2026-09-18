@@ -1334,3 +1334,345 @@ body::-webkit-scrollbar-thumb:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+/* =========================================================
+   CHAMPION POOL
+   ========================================================= */
+
+.champion-pool-panel {
+    margin: 14px 0;
+    padding: 12px;
+    background:
+        linear-gradient(90deg, rgba(200,170,110,.035), transparent 60%),
+        rgba(5, 12, 18, .48);
+    border: 1px solid #263544;
+    border-radius: 5px;
+}
+
+.champion-pool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+}
+
+.champion-pool-header strong {
+    display: block;
+    color: #c8c1b3;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.champion-pool-header small {
+    display: block;
+    margin-top: 3px;
+    color: #66717b;
+    font-size: 9px;
+}
+
+.champion-pool-button {
+    flex-shrink: 0;
+    padding: 7px 10px;
+    color: var(--gold);
+    background: rgba(200, 170, 110, .04);
+    border: 1px solid var(--gold-dark);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 700;
+    transition: .18s ease;
+}
+
+.champion-pool-button:hover {
+    color: var(--gold-light);
+    border-color: var(--gold);
+    background: rgba(200, 170, 110, .09);
+}
+
+.champion-pool-preview {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    min-height: 28px;
+    margin-top: 9px;
+    padding-top: 9px;
+    border-top: 1px solid var(--line-soft);
+}
+
+.champion-pool-empty {
+    color: #59646e;
+    font-size: 9px;
+}
+
+.pool-description {
+    margin-bottom: 15px;
+    color: #7d8790;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.pool-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    color: #68737d;
+    background: rgba(5, 12, 18, .55);
+    border: 1px solid #192938;
+    border-radius: 4px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
+
+.pool-summary strong {
+    color: var(--gold);
+    font-size: 9px;
+}
+
+#close-pool-modal {
+    width: 31px;
+    height: 31px;
+    color: #777f87;
+    background: #0b1721;
+    border: 1px solid #253544;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#close-pool-modal:hover {
+    color: var(--gold);
+    border-color: var(--gold-dark);
+}
+
+#pool-champion-list {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 7px;
+    align-content: start;
+}
+
+.pool-champion-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 6px;
+    color: var(--text);
+    background: #0c1823;
+    border: 1px solid #1d2e3d;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.pool-champion-option:hover {
+    border-color: #65532e;
+    background: #142432;
+    transform: translateY(-1px);
+}
+
+.pool-champion-option.selected {
+    border-color: var(--gold);
+    background:
+        linear-gradient(180deg, rgba(200,170,110,.11), transparent),
+        #111f2c;
+    box-shadow: inset 0 0 0 1px rgba(200,170,110,.12);
+}
+
+.pool-champion-option img {
+    width: 100%;
+    max-width: 68px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.pool-champion-option span {
+    width: 100%;
+    overflow: hidden;
+    color: #aaa79f;
+    font-size: 9px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pool-champion-option.selected span {
+    color: var(--gold-light);
+}
+
+.pool-preview-champion {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 6px 3px 3px;
+    color: #aaa79f;
+    background: #0c1823;
+    border: 1px solid #253544;
+    border-radius: 3px;
+    font-size: 8px;
+}
+
+.pool-preview-champion img {
+    width: 22px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+@media (max-width: 760px) {
+    .champion-pool-header {
+        align-items: flex-start;
+    }
+
+    #pool-champion-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 430px) {
+    .champion-pool-header {
+        flex-direction: column;
+    }
+
+    #pool-champion-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+/* Ajustes visuales del buscador del Champion Pool */
+
+#pool-search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    color: #c8c1b3;
+    background: #07131d;
+    border: 1px solid #263746;
+    border-radius: 4px;
+    outline: none;
+    font-size: 11px;
+}
+
+#pool-search:focus {
+    border-color: var(--gold-dark);
+}
+
+#pool-search::placeholder {
+    color: #59646e;
+}
+
+.pool-modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+}
+#pool-modal .search-wrapper {
+    position: relative;
+}
+
+#pool-modal .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+#pool-modal #pool-search {
+    padding-left: 36px;
+}
+/* =========================================================
+   PERSONAL RECOMMENDATIONS
+   ========================================================= */
+
+.personal-recommendations {
+    margin: 14px 0;
+    padding: 12px;
+    background:
+        linear-gradient(90deg, rgba(200,170,110,.06), transparent 65%),
+        rgba(5, 12, 18, .55);
+    border: 1px solid #3a3528;
+    border-radius: 5px;
+}
+
+.personal-recommendations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.personal-recommendations-header strong {
+    display: block;
+    color: var(--gold-light);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.personal-recommendations-header > span {
+    color: #68737d;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+#personal-recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.personal-recommendation-item {
+    display: grid;
+    grid-template-columns: 42px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #0c1823;
+    border: 1px solid #253544;
+    border-radius: 4px;
+}
+
+
+.personal-recommendation-item strong {
+    color: #c8c1b3;
+    font-size: 10px;
+}
+
+.personal-recommendation-item img {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.personal-pick-info {
+    min-width: 0;
+}
+
+.personal-pick-info strong {
+    display: block;
+    color: var(--gold-light);
+    font-size: 11px;
+}
+
+.personal-pick-info small {
+    display: block;
+    margin-top: 3px;
+    color: #68737d;
+    font-size: 8px;
+}
+
+.personal-recommendation-item > span:last-child {
+    color: var(--gold-light);
+    font-size: 10px;
+    font-weight: 700;
+}

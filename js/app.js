@@ -717,6 +717,48 @@ function generateRecommendations() {
             ...calculateDraftScore(champion)
         }))
         .sort((a, b) => b.finalScore - a.finalScore);
+        const personalPoolIds = getChampionPoolForRole(selectedRole);
+
+    const personalScores = personalPoolIds
+    .filter(championId => !selected.includes(championId))
+    .map(championId => champions.find(champion => champion.id === championId))
+    .filter(Boolean)
+    .map(champion => ({
+        champion,
+        ...calculateDraftScore(champion)
+    }))
+    .sort((a, b) => b.finalScore - a.finalScore);
+    const personalSection = document.getElementById("personal-recommendations");
+    const personalList = document.getElementById("personal-recommendations-list");
+
+if (personalSection && personalList) {
+    personalList.innerHTML = "";
+
+    if (personalScores.length > 0) {
+        personalSection.classList.remove("hidden");
+
+        personalScores.slice(0, 1).forEach((item, index) => {
+            const row = document.createElement("div");
+            row.className = "personal-recommendation-item";
+
+            row.innerHTML = `
+    <img
+        src="https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/${item.champion.image.full}"
+        alt="${item.champion.name}"
+    >
+    <div class="personal-pick-info">
+        <strong>${item.champion.name}</strong>
+        <small>Mejor opción de tu Champion Pool para ${selectedRole}</small>
+    </div>
+    <span>${item.finalScore.toFixed(1)} Draft Score</span>
+`;
+
+            personalList.appendChild(row);
+        });
+    } else {
+        personalSection.classList.add("hidden");
+    }
+}
 
     const recommendations = allNormalScores.slice(0, 5);
 
@@ -810,21 +852,6 @@ function calculateTrickyPick(selected, recommendations) {
         mostramos los 5 candidatos Tricky más fuertes.
         Esto luego lo podremos quitar.
     */
-    console.table(
-        candidates.slice(0, 5).map((item, index) => ({
-            posicion: index + 1,
-            champion: item.champion.name,
-            role: selectedRole,
-            type: item.tricky.type,
-            games: item.winRateData.games,
-            rarity: `${Math.round(item.tricky.rarity * 100)}%`,
-            draftScore: item.finalScore,
-            trickyScore: item.tricky.score,
-            enemy: item.scores.matchupScore,
-            synergy: item.scores.synergyScore,
-            composition: item.scores.compositionScore
-        }))
-    );
 
     return candidates[0] || null;
 }
@@ -1411,20 +1438,6 @@ function createTrickyPick(item) {
 
     recommendationsContainer.appendChild(div);
 
-    console.log(
-        "Tricky Pick:",
-        {
-            champion: item.champion.name,
-            role: selectedRole,
-            games,
-            draftScore: item.finalScore,
-            trickyScore: item.tricky.score,
-            rarity:
-                `${rarityPercent}%`,
-            evidence:
-                item.tricky.evidence
-        }
-    );
 }
 
 function metric(value, label, sample = "") {
@@ -1652,11 +1665,170 @@ async function startApp() {
         ]);
 
         updateDatasetStatus();
+        renderChampionPoolPreview();
 
     } catch (error) {
         console.error(error);
         datasetStatus.textContent = "Error cargando datos";
     }
 }
+// =========================================================
+// CHAMPION POOL MODAL
+// =========================================================
+const CHAMPION_POOL_STORAGE_KEY = "syneriftChampionPool";
+
+function getSavedChampionPool() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(CHAMPION_POOL_STORAGE_KEY) || "[]"
+        );
+
+        return Array.isArray(saved) ? saved : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveChampionPool(pool) {
+    localStorage.setItem(
+        CHAMPION_POOL_STORAGE_KEY,
+        JSON.stringify(pool)
+    );
+}
+function renderChampionPoolPreview() {
+    const preview = document.getElementById("champion-pool-preview");
+
+    if (!preview) return;
+
+    const pool = getSavedChampionPool();
+    preview.innerHTML = "";
+
+    if (pool.length === 0) {
+        preview.innerHTML = `
+            <span class="champion-pool-empty">
+                No has añadido campeones
+            </span>
+        `;
+        return;
+    }
+
+    pool.forEach(championId => {
+        const champion = champions.find(item => item.id === championId);
+
+        if (!champion) return;
+
+        const item = document.createElement("div");
+        item.className = "pool-preview-champion";
+
+        item.innerHTML = `
+            <img
+                src="https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/${champion.image.full}"
+                alt="${champion.name}"
+            >
+            <span>${champion.name}</span>
+        `;
+
+        preview.appendChild(item);
+    });
+}
+function getChampionPoolForRole(role) {
+    const pool = getSavedChampionPool();
+    const roleChampions = new Set(getChampionsForRole(role));
+
+    return pool.filter(championId => roleChampions.has(championId));
+}
+function setupChampionPoolModal() {
+    const openButton = document.getElementById("open-champion-pool");
+    const closeButton = document.getElementById("close-pool-modal");
+    const modal = document.getElementById("pool-modal");
+    const searchInput = document.getElementById("pool-search");
+    const championList = document.getElementById("pool-champion-list");
+
+    if (!openButton || !closeButton || !modal || !searchInput || !championList) return;
+
+    function renderPoolChampions(search = "") {
+        const query = search.trim().toLowerCase();
+
+        const filteredChampions = champions.filter(champion =>
+            champion.name.toLowerCase().includes(query)
+        );
+
+        championList.innerHTML = "";
+
+        filteredChampions.forEach(champion => {
+            const option = document.createElement("div");
+            option.className = "pool-champion-option";
+            const savedPool = getSavedChampionPool();
+
+if (savedPool.includes(champion.id)) {
+    option.classList.add("selected");
+}
+
+            option.innerHTML = `
+                <img
+                    src="https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/${champion.image.full}"
+                    alt="${champion.name}"
+                >
+                <span>${champion.name}</span>
+            `;
+            option.addEventListener("click", () => {
+    const pool = getSavedChampionPool();
+    const championId = champion.id;
+    const isSelected = pool.includes(championId);
+
+    const updatedPool = isSelected
+        ? pool.filter(id => id !== championId)
+        : [...pool, championId];
+
+    saveChampionPool(updatedPool);
+    renderChampionPoolPreview();
+
+    option.classList.toggle("selected", !isSelected);
+
+    const poolCount = document.getElementById("pool-count");
+    const count = updatedPool.length;
+
+    poolCount.textContent =
+        count === 1
+            ? "1 campeón"
+            : `${count} campeones`;
+});
+            championList.appendChild(option);
+        });
+    }
+
+    openButton.addEventListener("click", () => {
+        searchInput.value = "";
+        const savedPool = getSavedChampionPool();
+const poolCount = document.getElementById("pool-count");
+
+poolCount.textContent =
+    savedPool.length === 1
+        ? "1 campeón"
+        : `${savedPool.length} campeones`;
+        renderPoolChampions();
+        modal.classList.remove("hidden");
+        searchInput.focus();
+    });
+
+    closeButton.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        renderChampionPoolPreview();
+    });
+
+    modal.addEventListener("click", event => {
+    if (event.target === modal) {
+        modal.classList.add("hidden");
+        renderChampionPoolPreview();
+    }
+});
+
+    searchInput.addEventListener("input", () => {
+        renderPoolChampions(searchInput.value);
+    });
+}
+
+setupChampionPoolModal();
+
 
 startApp();

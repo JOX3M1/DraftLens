@@ -118,7 +118,26 @@
                 </div>
             </div>
 
-            <p class="info">Selecciona la posición que quieres draftear</p>
+            <!-- CHAMPION POOL PERSONAL -->
+<div class="champion-pool-panel">
+    <div class="champion-pool-header">
+        <div>
+            <p class="eyebrow">PERSONALIZACIÓN</p>
+            <strong>Mi Champion Pool</strong>
+            <small>Guarda los campeones que juegas habitualmente</small>
+        </div>
+
+        <button id="open-champion-pool" class="champion-pool-button">
+            Configurar pool
+        </button>
+    </div>
+
+    <div id="champion-pool-preview" class="champion-pool-preview">
+        <span class="champion-pool-empty">
+            No has añadido campeones
+        </span>
+    </div>
+</div><p class="info">Selecciona la posición que quieres draftear</p>
 
             <div class="role-selector">
                 <button class="role-button" data-role="TOP">
@@ -143,7 +162,18 @@
             </div>
 
             <p id="recommendation-info">Selecciona una posición.</p>
+            <!-- RECOMENDACIONES PERSONALES -->
+<div id="personal-recommendations" class="personal-recommendations hidden">
+    <div class="personal-recommendations-header">
+        <div>
+            <p class="eyebrow">CHAMPION POOL</p>
+            <strong>Para ti</strong>
+        </div>
+        <span>Basado en tus campeones</span>
+    </div>
 
+    <div id="personal-recommendations-list"></div>
+</div>
             <div id="recommendations" class="recommendations-empty">
                 <div class="empty-state">
                     <div class="empty-icon">S</div>
@@ -244,7 +274,44 @@
     </div>
 
 </div>
+<!-- CHAMPION POOL MODAL -->
+<div id="pool-modal" class="modal hidden">
+    <div class="modal-content pool-modal-content">
 
+        <div class="modal-header">
+            <div>
+                <p class="eyebrow">SYNERIFT · PERSONAL PROFILE</p>
+                <h2>Mi Champion Pool</h2>
+            </div>
+
+            <button id="close-pool-modal" title="Cerrar">✕</button>
+        </div>
+
+        <p class="pool-description">
+            Selecciona los campeones que juegas habitualmente.
+            Synerift los tendrá en cuenta para mostrar recomendaciones personales.
+        </p>
+
+        <div class="search-wrapper">
+            <span class="search-icon">⌕</span>
+
+            <input
+                type="text"
+                id="pool-search"
+                placeholder="Buscar campeón..."
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="pool-summary">
+            <span>Champion Pool</span>
+            <strong id="pool-count">0 campeones</strong>
+        </div>
+
+        <div id="pool-champion-list"></div>
+
+    </div>
+</div>
 <script src="js/stats.js"></script>
 <script src="js/championProfiles.js"></script>
 <script src="js/app.js"></script>
