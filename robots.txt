@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jox3m1.github.io/DraftLens/sitemap.xml
+Sitemap: https://jox3m1.github.io/Synerift/sitemap.xml
