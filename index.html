@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoL Draft Assistant</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div>
+        <h1>LoL Draft Assistant</h1>
+        <p>Construye tu draft y encuentra el pick que mejor encaja.</p>
+    </div>
+    <div class="header-actions">
+        <span id="dataset-status" class="dataset-status">Cargando dataset…</span>
+        <button id="clear-draft" class="secondary-button">Limpiar draft</button>
+    </div>
+</header>
+
+<main>
+    <section class="draft">
+        <div class="team blue-team">
+            <h2>Tu equipo</h2>
+            <div class="player-slot" data-team="ally" data-role="TOP"><span>TOP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="ally" data-role="JGL"><span>JGL</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="ally" data-role="MID"><span>MID</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="ally" data-role="ADC"><span>ADC</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="ally" data-role="SUP"><span>SUP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+        </div>
+
+        <div class="center-panel">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">DRAFT ENGINE</p>
+                    <h2>Recomendaciones</h2>
+                </div>
+                <span class="score-formula">35% matchup · 30% sinergia · 20% WR · 15% composición</span>
+            </div>
+            <p class="info">¿Qué posición quieres draftear?</p>
+            <div class="role-selector">
+                <button class="role-button" data-role="TOP">TOP</button>
+                <button class="role-button" data-role="JGL">JGL</button>
+                <button class="role-button" data-role="MID">MID</button>
+                <button class="role-button" data-role="ADC">ADC</button>
+                <button class="role-button" data-role="SUP">SUP</button>
+            </div>
+            <p id="recommendation-info">Selecciona una posición.</p>
+            <div id="recommendations" class="recommendations-empty">
+                <p>Completa el draft y elige el rol que quieres recomendar.</p>
+            </div>
+        </div>
+
+        <div class="team red-team">
+            <h2>Equipo enemigo</h2>
+            <div class="player-slot" data-team="enemy" data-role="TOP"><span>TOP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="enemy" data-role="JGL"><span>JGL</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="enemy" data-role="MID"><span>MID</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="enemy" data-role="ADC"><span>ADC</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="player-slot" data-team="enemy" data-role="SUP"><span>SUP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+        </div>
+    </section>
+</main>
+
+<div id="champion-modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div><p class="eyebrow">CHAMPION SELECT</p><h2>Seleccionar campeón</h2></div>
+            <button id="close-modal">✕</button>
+        </div>
+        <input type="text" id="champion-search" placeholder="Buscar campeón..." autocomplete="off">
+        <div id="champion-list"></div>
+    </div>
+</div>
+
+<script src="js/stats.js"></script>
+<script src="js/championProfiles.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
