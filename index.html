@@ -131,7 +131,9 @@
             Configurar pool
         </button>
     </div>
-
+    <div class="champion-pool-count">
+        <strong id="champion-pool-count">0 campeones</strong>
+    </div>
     <div id="champion-pool-preview" class="champion-pool-preview">
         <span class="champion-pool-empty">
             No has añadido campeones
@@ -302,7 +304,14 @@
                 autocomplete="off"
             >
         </div>
-
+        <div class="pool-role-filters">
+    <button type="button" class="pool-role-filter active" data-role="ALL">TODOS</button>
+    <button type="button" class="pool-role-filter" data-role="TOP">TOP</button>
+    <button type="button" class="pool-role-filter" data-role="JGL">JGL</button>
+    <button type="button" class="pool-role-filter" data-role="MID">MID</button>
+    <button type="button" class="pool-role-filter" data-role="ADC">ADC</button>
+    <button type="button" class="pool-role-filter" data-role="SUP">SUP</button>
+</div>
         <div class="pool-summary">
             <span>Champion Pool</span>
             <strong id="pool-count">0 campeones</strong>

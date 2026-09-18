@@ -1676,3 +1676,166 @@ body::-webkit-scrollbar-thumb:hover {
     font-size: 10px;
     font-weight: 700;
 }
+.personal-pick-factors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+}
+
+.personal-pick-factors > span {
+    padding: 3px 6px;
+    color: #68737d;
+    background: rgba(5, 12, 18, .55);
+    border: 1px solid #223442;
+    border-radius: 3px;
+    font-size: 8px;
+    white-space: nowrap;
+}
+
+.personal-pick-factors > span strong {
+    margin-left: 3px;
+    color: #c8c1b3;
+    font-size: 8px;
+}
+.personal-pick-factors strong.positive {
+    color: #6fcf97;
+}
+
+.personal-pick-factors strong.negative {
+    color: #eb6a6a;
+}
+
+.personal-pick-factors strong.neutral {
+    color: #7f8b96;
+}
+.personal-pick-explanation {
+    margin: 7px 0 0;
+    color: #8f9aa3;
+    font-size: 10px;
+    line-height: 1.35;
+    font-weight: 400;
+}
+
+.personal-pick-explanation::before {
+    content: "↳ ";
+    color: #c8aa6e;
+}
+.pool-preview-champion {
+    position: relative;
+}
+
+.remove-pool-champion {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aab3ba;
+    background: #111c24;
+    border: 1px solid #344653;
+    border-radius: 50%;
+    font-size: 8px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.pool-preview-champion:hover .remove-pool-champion {
+    opacity: 1;
+}
+
+.remove-pool-champion:hover {
+    color: #eb6a6a;
+    border-color: #eb6a6a;
+}
+.personal-recommendation-item {
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+}
+
+.personal-recommendation-item:hover {
+    border-color: #5b7180;
+    background: rgba(15, 29, 39, .85);
+}
+.pool-role-filters {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0 12px;
+    flex-wrap: wrap;
+}
+
+.pool-role-filter {
+    padding: 6px 10px;
+    color: #7f8b96;
+    background: rgba(5, 12, 18, .65);
+    border: 1px solid #263946;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.pool-role-filter:hover {
+    color: #c8c1b3;
+    border-color: #536b7a;
+}
+
+.pool-role-filter.active {
+    color: #c8aa6e;
+    background: rgba(200, 170, 110, .08);
+    border-color: #8d7546;
+}
+.pool-preview-champion.not-current-role {
+    opacity: .3;
+    filter: grayscale(.65);
+}
+
+.pool-preview-champion:not(.not-current-role) {
+    transition: opacity .15s ease, filter .15s ease, border-color .15s ease;
+}
+.pool-preview-champion.role-clickable {
+    cursor: pointer;
+}
+
+.pool-preview-champion.role-clickable:hover {
+    border-color: #8d7546;
+    background: rgba(200, 170, 110, .08);
+}
+
+.pool-preview-champion.not-current-role {
+    cursor: default;
+}
+.champion-pool-count strong {
+    font-family: inherit;
+    color: #68737d;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: .2px;
+}
+.player-slot.pick-flash {
+    animation: pickFlash .45s ease;
+}
+
+@keyframes pickFlash {
+    0% {
+        border-color: #c8aa6e;
+        box-shadow: 0 0 0 1px rgba(200, 170, 110, .55);
+    }
+
+    50% {
+        border-color: #e2c77d;
+        box-shadow: 0 0 12px rgba(200, 170, 110, .28);
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}

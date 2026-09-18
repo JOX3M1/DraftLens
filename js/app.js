@@ -114,6 +114,7 @@ function openChampionModal(slot) {
 
 function selectChampion(champion) {
     if (!currentSlot) return;
+    const selectedSlot = currentSlot;
     const oldChampion = currentSlot.dataset.champion;
     const duplicate = Array.from(document.querySelectorAll(".player-slot"))
         .find(slot => slot !== currentSlot && slot.dataset.champion === champion.id);
@@ -124,6 +125,13 @@ function selectChampion(champion) {
     currentSlot.querySelector(".champion-button").innerHTML =
         `<img src="${championImage(champion)}" alt="${champion.name}">`;
     currentSlot.classList.add("selected");
+    selectedSlot.classList.remove("pick-flash");
+    void selectedSlot.offsetWidth;
+    selectedSlot.classList.add("pick-flash");
+
+    setTimeout(() => {
+        selectedSlot.classList.remove("pick-flash");
+    }, 450);
     modal.classList.add("hidden");
 
     if (oldChampion !== champion.id && selectedRole) generateRecommendations();
@@ -147,6 +155,7 @@ function clearDraft() {
 
     selectedRole = null;
     roleButtons.forEach(button => button.classList.remove("active"));
+    renderChampionPoolPreview();
     recommendationInfo.textContent = "Selecciona una posición.";
     recommendationsContainer.className = "recommendations-empty";
     recommendationsContainer.innerHTML =
@@ -189,6 +198,7 @@ roleButtons.forEach(button => {
         selectedRole = button.dataset.role;
         recommendationInfo.textContent =
             `Mejores opciones para ${selectedRole} con el draft actual`;
+        renderChampionPoolPreview();
         generateRecommendations();
     });
 });
@@ -749,9 +759,45 @@ if (personalSection && personalList) {
     <div class="personal-pick-info">
         <strong>${item.champion.name}</strong>
         <small>Mejor opción de tu Champion Pool para ${selectedRole}</small>
+        <div class="personal-pick-factors">
+            <span>Vs enemigos <strong class="${getImpactClass(item.impacts.matchup)}">${formatImpact(item.impacts.matchup)}</strong></span>
+            <span>Sinergia <strong class="${getImpactClass(item.impacts.synergy)}">${formatImpact(item.impacts.synergy)}</strong></span>
+            <span>WR <strong class="${getImpactClass(item.impacts.winRate)}">${formatImpact(item.impacts.winRate)}</strong></span>
+            <span>Composición <strong class="${getImpactClass(item.impacts.composition)}">${formatImpact(item.impacts.composition)}</strong></span>
+        </div>
+        <p class="personal-pick-explanation">
+            ${getPersonalPickExplanation(item.impacts)}
+        </p>
     </div>
     <span>${item.finalScore.toFixed(1)} Draft Score</span>
-`;
+`;row.setAttribute("role", "button");
+row.setAttribute("tabindex", "0");
+
+function pickPersonalRecommendation() {
+    const targetSlot = document.querySelector(
+        `.player-slot[data-team="ally"][data-role="${selectedRole}"]`
+    );
+
+    if (!targetSlot) {
+        console.error(
+            `No se encontró el slot aliado para ${selectedRole}`
+        );
+        return;
+    }
+
+    currentSlot = targetSlot;
+    selectChampion(item.champion);
+    currentSlot = null;
+}
+
+row.addEventListener("click", pickPersonalRecommendation);
+
+row.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        pickPersonalRecommendation();
+    }
+});
 
             personalList.appendChild(row);
         });
@@ -1499,7 +1545,42 @@ function formatImpact(value) {
     return value > 0
         ? `+${value.toFixed(1)}`
         : value.toFixed(1);
-}function createRecommendation(item, index) {
+}
+function getImpactClass(value) {
+    if (Math.abs(value) < 0.05) return "neutral";
+    return value > 0 ? "positive" : "negative";
+}
+function getPersonalPickExplanation(impacts) {
+    const factors = [
+    { name: "su rendimiento contra el equipo rival", value: impacts.matchup },
+    { name: "su encaje con tus aliados", value: impacts.synergy },
+    { name: "su rendimiento estadístico", value: impacts.winRate },
+    { name: "su aportación a la composición", value: impacts.composition }
+];
+
+    const strongestPositive = [...factors]
+        .filter(factor => factor.value > 0.05)
+        .sort((a, b) => b.value - a.value)[0];
+
+    const strongestNegative = [...factors]
+        .filter(factor => factor.value < -0.05)
+        .sort((a, b) => a.value - b.value)[0];
+
+    if (strongestPositive && strongestNegative) {
+        return `Destaca por ${strongestPositive.name}, aunque ${strongestNegative.name} reduce su puntuación.`;
+    }
+
+    if (strongestPositive) {
+        return `Destaca especialmente por ${strongestPositive.name}.`;
+    }
+
+    if (strongestNegative) {
+        return `Su principal punto débil en este draft es ${strongestNegative.name}.`;
+    }
+
+    return "Es una opción equilibrada para el draft actual.";
+}
+function createRecommendation(item, index) {
     const div = document.createElement("article");
     div.className = `recommendation ${index === 0 ? "best-pick" : ""}`;
 
@@ -1703,6 +1784,15 @@ function renderChampionPoolPreview() {
     const pool = getSavedChampionPool();
     preview.innerHTML = "";
 
+    const countElement = document.getElementById("champion-pool-count");
+
+if (countElement) {
+    countElement.textContent =
+        pool.length === 1
+            ? "1 campeón"
+            : `${pool.length} campeones`;
+}
+
     if (pool.length === 0) {
         preview.innerHTML = `
             <span class="champion-pool-empty">
@@ -1711,7 +1801,9 @@ function renderChampionPoolPreview() {
         `;
         return;
     }
-
+    const selectedRolePool = selectedRole
+        ? getChampionsForRole(selectedRole)
+        : null;
     pool.forEach(championId => {
         const champion = champions.find(item => item.id === championId);
 
@@ -1719,6 +1811,19 @@ function renderChampionPoolPreview() {
 
         const item = document.createElement("div");
         item.className = "pool-preview-champion";
+        if (selectedRolePool) {
+            const availableForRole = selectedRolePool.has(champion.id);
+
+            if (!availableForRole) {
+                item.classList.add("not-current-role");
+            }
+
+            item.title = availableForRole
+                ? `${champion.name} · Disponible para ${selectedRole}`
+                : `${champion.name} · No disponible para ${selectedRole}`;
+        } else {
+            item.title = champion.name;
+        }
 
         item.innerHTML = `
             <img
@@ -1726,8 +1831,48 @@ function renderChampionPoolPreview() {
                 alt="${champion.name}"
             >
             <span>${champion.name}</span>
+            <button
+                class="remove-pool-champion"
+                type="button"
+                title="Eliminar ${champion.name}"
+            >✕</button>
         `;
 
+        const removeButton = item.querySelector(".remove-pool-champion");
+
+        removeButton.addEventListener("click", event => {
+            event.stopPropagation();
+
+            const updatedPool = getSavedChampionPool()
+                .filter(id => id !== championId);
+
+            saveChampionPool(updatedPool);
+            renderChampionPoolPreview();
+
+            if (selectedRole) {
+                generateRecommendations();
+            }
+        });
+        if (selectedRolePool && selectedRolePool.has(champion.id)) {
+            item.classList.add("role-clickable");
+
+            item.addEventListener("click", event => {
+                if (event.target.closest(".remove-pool-champion")) return;
+
+                const targetSlot = document.querySelector(
+                    `.player-slot[data-team="ally"][data-role="${selectedRole}"]`
+                );
+
+                if (!targetSlot) {
+                    console.error(`No se encontró el slot aliado para ${selectedRole}`);
+                    return;
+                }
+
+                currentSlot = targetSlot;
+                selectChampion(champion);
+                currentSlot = null;
+            });
+        }
         preview.appendChild(item);
     });
 }
@@ -1743,26 +1888,38 @@ function setupChampionPoolModal() {
     const modal = document.getElementById("pool-modal");
     const searchInput = document.getElementById("pool-search");
     const championList = document.getElementById("pool-champion-list");
+    const roleButtons = document.querySelectorAll(".pool-role-filter");
 
     if (!openButton || !closeButton || !modal || !searchInput || !championList) return;
+
+    let selectedPoolRole = "ALL";
 
     function renderPoolChampions(search = "") {
         const query = search.trim().toLowerCase();
 
-        const filteredChampions = champions.filter(champion =>
+        let filteredChampions = champions.filter(champion =>
             champion.name.toLowerCase().includes(query)
         );
+
+        if (selectedPoolRole !== "ALL") {
+            const rolePool = getChampionsForRole(selectedPoolRole);
+
+            filteredChampions = filteredChampions.filter(champion =>
+                rolePool.has(champion.id)
+            );
+        }
 
         championList.innerHTML = "";
 
         filteredChampions.forEach(champion => {
             const option = document.createElement("div");
             option.className = "pool-champion-option";
+
             const savedPool = getSavedChampionPool();
 
-if (savedPool.includes(champion.id)) {
-    option.classList.add("selected");
-}
+            if (savedPool.includes(champion.id)) {
+                option.classList.add("selected");
+            }
 
             option.innerHTML = `
                 <img
@@ -1771,41 +1928,75 @@ if (savedPool.includes(champion.id)) {
                 >
                 <span>${champion.name}</span>
             `;
+
             option.addEventListener("click", () => {
-    const pool = getSavedChampionPool();
-    const championId = champion.id;
-    const isSelected = pool.includes(championId);
+                const pool = getSavedChampionPool();
+                const championId = champion.id;
+                const isSelected = pool.includes(championId);
 
-    const updatedPool = isSelected
-        ? pool.filter(id => id !== championId)
-        : [...pool, championId];
+                const updatedPool = isSelected
+                    ? pool.filter(id => id !== championId)
+                    : [...pool, championId];
 
-    saveChampionPool(updatedPool);
-    renderChampionPoolPreview();
+                saveChampionPool(updatedPool);
+                renderChampionPoolPreview();
 
-    option.classList.toggle("selected", !isSelected);
+                option.classList.toggle("selected", !isSelected);
 
-    const poolCount = document.getElementById("pool-count");
-    const count = updatedPool.length;
+                const poolCount = document.getElementById("pool-count");
+                const count = updatedPool.length;
 
-    poolCount.textContent =
-        count === 1
-            ? "1 campeón"
-            : `${count} campeones`;
-});
+                if (poolCount) {
+                    poolCount.textContent =
+                        count === 1
+                            ? "1 campeón"
+                            : `${count} campeones`;
+                }
+
+                if (selectedRole) {
+                    generateRecommendations();
+                }
+            });
+
             championList.appendChild(option);
         });
     }
 
+    roleButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            selectedPoolRole = button.dataset.role;
+
+            roleButtons.forEach(item =>
+                item.classList.remove("active")
+            );
+
+            button.classList.add("active");
+
+            renderPoolChampions(searchInput.value);
+        });
+    });
+
     openButton.addEventListener("click", () => {
         searchInput.value = "";
-        const savedPool = getSavedChampionPool();
-const poolCount = document.getElementById("pool-count");
+        selectedPoolRole = "ALL";
 
-poolCount.textContent =
-    savedPool.length === 1
-        ? "1 campeón"
-        : `${savedPool.length} campeones`;
+        roleButtons.forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.role === "ALL"
+            );
+        });
+
+        const savedPool = getSavedChampionPool();
+        const poolCount = document.getElementById("pool-count");
+
+        if (poolCount) {
+            poolCount.textContent =
+                savedPool.length === 1
+                    ? "1 campeón"
+                    : `${savedPool.length} campeones`;
+        }
+
         renderPoolChampions();
         modal.classList.remove("hidden");
         searchInput.focus();
@@ -1817,11 +2008,11 @@ poolCount.textContent =
     });
 
     modal.addEventListener("click", event => {
-    if (event.target === modal) {
-        modal.classList.add("hidden");
-        renderChampionPoolPreview();
-    }
-});
+        if (event.target === modal) {
+            modal.classList.add("hidden");
+            renderChampionPoolPreview();
+        }
+    });
 
     searchInput.addEventListener("input", () => {
         renderPoolChampions(searchInput.value);
