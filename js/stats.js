@@ -53,12 +53,6 @@ function buildStatsIndexes() {
         );
     }
 
-    console.log("Índices creados:", {
-        winRate: statsIndex.winRate.size,
-        matchups: statsIndex.matchup.size,
-        enemies: statsIndex.enemy.size,
-        synergies: statsIndex.synergy.size
-    });
 }
 
 async function loadStats() {
@@ -88,12 +82,6 @@ async function loadStats() {
         }
 
         buildStatsIndexes();
-
-        console.log(
-            "Stats cargadas:",
-            draftStats.matchesProcessed,
-            "partidas"
-        );
     } catch (error) {
         console.error("Error cargando estadísticas:", error);
     }

@@ -1653,15 +1653,6 @@ async function startApp() {
 
         updateDatasetStatus();
 
-        console.log(
-            "Draft Assistant preparado",
-            {
-                champions: champions.length,
-                matches: draftStats.matchesProcessed,
-                enemyRelations: draftStats.enemies?.length,
-                synergies: draftStats.synergies?.length
-            }
-        );
     } catch (error) {
         console.error(error);
         datasetStatus.textContent = "Error cargando datos";
