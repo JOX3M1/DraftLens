@@ -63,7 +63,7 @@ function buildStatsIndexes() {
 
 async function loadStats() {
     try {
-        const response = await fetch("data/stats.json", { cache: "no-store" });
+        const response = await fetch("data/stats.json");
 
         if (!response.ok) {
             throw new Error("No se pudo cargar stats.json");
