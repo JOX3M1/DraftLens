@@ -6,79 +6,241 @@
 
     <title>Synerift - League of Legends Draft Assistant</title>
 
-    <meta name="description" content="DraftLens is a League of Legends draft assistant that recommends champions based on matchups, team synergy, win rate and team composition.">
-
+    <meta name="description" content="Synerift is a League of Legends draft assistant that recommends champions based on matchups, team synergy, win rate and team composition.">
     <meta name="robots" content="index, follow">
-
-    <link rel="canonical" href="https://jox3m1.github.io/Synerift/">
 
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<header>
-    <div>
-        <h1>Synerift</h1>
-        <p>Construye tu draft y encuentra el pick que mejor encaja.</p>
+
+<header class="site-header">
+    <div class="brand">
+        <div class="brand-mark">S</div>
+
+        <div class="brand-copy">
+            <div class="brand-title-row">
+                <h1>SYNERIFT</h1>
+                <span class="brand-version">BETA</span>
+            </div>
+
+            <p>Intelligent League of Legends Draft Assistant</p>
+        </div>
     </div>
+
     <div class="header-actions">
-        <span id="dataset-status" class="dataset-status">Cargando dataset…</span>
-        <button id="clear-draft" class="secondary-button">Limpiar draft</button>
+        <span id="dataset-status" class="dataset-status">
+            <span class="status-dot"></span>
+            Cargando dataset…
+        </span>
+
+        <button id="clear-draft" class="secondary-button">
+            Limpiar draft
+        </button>
     </div>
 </header>
 
 <main>
     <section class="draft">
+
+        <!-- TU EQUIPO -->
         <div class="team blue-team">
-            <h2>Tu equipo</h2>
-            <div class="player-slot" data-team="ally" data-role="TOP"><span>TOP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="ally" data-role="JGL"><span>JGL</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="ally" data-role="MID"><span>MID</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="ally" data-role="ADC"><span>ADC</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="ally" data-role="SUP"><span>SUP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
+            <div class="team-heading">
+                <div>
+                    <p class="team-label">BLUE SIDE</p>
+                    <h2>Tu equipo</h2>
+                </div>
+
+                <span class="team-count">5 PICKS</span>
+            </div>
+
+            <div class="player-slot" data-team="ally" data-role="TOP">
+                <span>TOP</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="ally" data-role="JGL">
+                <span>JGL</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="ally" data-role="MID">
+                <span>MID</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="ally" data-role="ADC">
+                <span>ADC</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="ally" data-role="SUP">
+                <span>SUP</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
         </div>
 
+        <!-- MOTOR CENTRAL -->
         <div class="center-panel">
+
             <div class="panel-heading">
                 <div>
-                    <p class="eyebrow">DRAFT ENGINE</p>
+                    <p class="eyebrow">SYNERIFT DRAFT ENGINE</p>
                     <h2>Recomendaciones</h2>
                 </div>
-                <span class="score-formula">35% matchup · 30% sinergia · 20% WR · 15% composición</span>
+
+                <div class="engine-status">
+                    <span class="engine-dot"></span>
+                    ENGINE READY
+                </div>
             </div>
-            <p class="info">¿Qué posición quieres draftear?</p>
+
+            <div class="formula-bar">
+                <span>Draft Score</span>
+
+                <div class="formula-items">
+                    <small><strong>35%</strong> Matchup</small>
+                    <small><strong>30%</strong> Sinergia</small>
+                    <small><strong>20%</strong> WR</small>
+                    <small><strong>15%</strong> Composición</small>
+                </div>
+            </div>
+
+            <p class="info">Selecciona la posición que quieres draftear</p>
+
             <div class="role-selector">
-                <button class="role-button" data-role="TOP">TOP</button>
-                <button class="role-button" data-role="JGL">JGL</button>
-                <button class="role-button" data-role="MID">MID</button>
-                <button class="role-button" data-role="ADC">ADC</button>
-                <button class="role-button" data-role="SUP">SUP</button>
+                <button class="role-button" data-role="TOP">
+                    <span>TOP</span>
+                </button>
+
+                <button class="role-button" data-role="JGL">
+                    <span>JGL</span>
+                </button>
+
+                <button class="role-button" data-role="MID">
+                    <span>MID</span>
+                </button>
+
+                <button class="role-button" data-role="ADC">
+                    <span>ADC</span>
+                </button>
+
+                <button class="role-button" data-role="SUP">
+                    <span>SUP</span>
+                </button>
             </div>
+
             <p id="recommendation-info">Selecciona una posición.</p>
+
             <div id="recommendations" class="recommendations-empty">
-                <p>Completa el draft y elige el rol que quieres recomendar.</p>
+                <div class="empty-state">
+                    <div class="empty-icon">S</div>
+
+                    <strong>Draft Engine preparado</strong>
+
+                    <p>
+                        Añade campeones al draft y selecciona el rol
+                        que quieres analizar.
+                    </p>
+
+                    <small>
+                        Synerift evaluará matchup, sinergia,
+                        win rate y composición.
+                    </small>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- EQUIPO ENEMIGO -->
+        <div class="team red-team">
+            <div class="team-heading">
+                <div>
+                    <p class="team-label">RED SIDE</p>
+                    <h2>Equipo enemigo</h2>
+                </div>
+
+                <span class="team-count">5 PICKS</span>
+            </div>
+
+            <div class="player-slot" data-team="enemy" data-role="TOP">
+                <span>TOP</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="enemy" data-role="JGL">
+                <span>JGL</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="enemy" data-role="MID">
+                <span>MID</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="enemy" data-role="ADC">
+                <span>ADC</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
+            </div>
+
+            <div class="player-slot" data-team="enemy" data-role="SUP">
+                <span>SUP</span>
+                <button class="champion-button">+</button>
+                <p class="champion-name">Sin seleccionar</p>
+                <button class="remove-pick" title="Quitar campeón">×</button>
             </div>
         </div>
 
-        <div class="team red-team">
-            <h2>Equipo enemigo</h2>
-            <div class="player-slot" data-team="enemy" data-role="TOP"><span>TOP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="enemy" data-role="JGL"><span>JGL</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="enemy" data-role="MID"><span>MID</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="enemy" data-role="ADC"><span>ADC</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-            <div class="player-slot" data-team="enemy" data-role="SUP"><span>SUP</span><button class="champion-button">+</button><p class="champion-name">Sin seleccionar</p><button class="remove-pick" title="Quitar campeón">×</button></div>
-        </div>
     </section>
 </main>
 
+<!-- SELECTOR DE CAMPEONES -->
 <div id="champion-modal" class="modal hidden">
+
     <div class="modal-content">
+
         <div class="modal-header">
-            <div><p class="eyebrow">CHAMPION SELECT</p><h2>Seleccionar campeón</h2></div>
-            <button id="close-modal">✕</button>
+            <div>
+                <p class="eyebrow">SYNERIFT · CHAMPION SELECT</p>
+                <h2>Seleccionar campeón</h2>
+            </div>
+
+            <button id="close-modal" title="Cerrar">✕</button>
         </div>
-        <input type="text" id="champion-search" placeholder="Buscar campeón..." autocomplete="off">
+
+        <div class="search-wrapper">
+            <span class="search-icon">⌕</span>
+
+            <input
+                type="text"
+                id="champion-search"
+                placeholder="Buscar campeón..."
+                autocomplete="off"
+            >
+        </div>
+
         <div id="champion-list"></div>
+
     </div>
+
 </div>
 
 <script src="js/stats.js"></script>
